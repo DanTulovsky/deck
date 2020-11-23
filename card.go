@@ -11,7 +11,8 @@ import (
 	// for Image() function
 	_ "image/png"
 
-	ppb "github.com/DanTulovsky/pepper-poker/proto"
+	ppb "github.com/DanTulovsky/poker/proto"
+
 	imgcat "github.com/martinlindhe/imgcat/lib"
 	"github.com/qeesung/image2ascii/convert"
 )
