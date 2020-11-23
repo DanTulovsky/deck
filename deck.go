@@ -12,7 +12,7 @@ import (
 	"github.com/nfnt/resize"
 	gim "github.com/ozankasikci/go-image-merge"
 
-	ppb "github.com/DanTulovsky/poker/proto"
+	ppb "github.com/DanTulovsky/pepper-poker/proto"
 )
 
 var (
