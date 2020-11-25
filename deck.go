@@ -223,7 +223,7 @@ func CardsImage(cards []*Card, divider bool) (image.Image, error) {
 		)
 	}
 
-	var width uint = uint(180 * length)
+	var width = uint(180 * length)
 	// height := int(float64(width) / 1.5)
 	img, err := gim.New(grids, length, 1).Merge()
 	if err != nil {
