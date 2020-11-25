@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	ppb "github.com/DanTulovsky/pepper-poker/proto"
+	ppb "github.com/DanTulovsky/pepper-poker-v2/proto"
 )
 
 func TestMain(m *testing.M) {
