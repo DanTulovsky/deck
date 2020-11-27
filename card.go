@@ -288,7 +288,7 @@ func CardsByRank(cards []Card) map[ppb.CardRank][]Card {
 }
 
 // CountBySuit returns a map of suit -> number present
-func CountBySuit(cards []*Card) map[ppb.CardSuit]int {
+func CountBySuit(cards []Card) map[ppb.CardSuit]int {
 	// count the number of each suit
 	bysuit := map[ppb.CardSuit]int{
 		ppb.CardSuit_Spade:   0,

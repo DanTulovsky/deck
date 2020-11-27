@@ -121,8 +121,8 @@ func (d *Deck) Return(card Card) error {
 }
 
 // RandomCard returns a random card (not from a deck)
-func RandomCard() *Card {
-	return &Card{
+func RandomCard() Card {
+	return Card{
 		Suite: RandomSuit(),
 		Rank:  RandomRank(),
 	}
