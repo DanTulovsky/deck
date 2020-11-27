@@ -22,7 +22,7 @@ var (
 
 // Deck is a deck of cards.
 type Deck struct {
-	cards []*Card
+	cards []Card
 }
 
 // NewDeck returns a new, unshuffled deck of cards.
@@ -54,7 +54,7 @@ func NewDeck() *Deck {
 	nSuits := len(suits)
 	nRanks := len(ranks)
 
-	var c = make([]*Card, nSuits*nRanks)
+	var c = make([]Card, nSuits*nRanks)
 	for i := 0; i < nSuits; i++ {
 		for j := 0; j < nRanks; j++ {
 			c[i*nRanks+j] = NewCard(suits[i], ranks[j])
@@ -83,9 +83,9 @@ func (d *Deck) IsEmpty() bool {
 }
 
 // Next returns the next card from the deck, or an error if there are no remaining cards.
-func (d *Deck) Next() (*Card, error) {
+func (d *Deck) Next() (Card, error) {
 	if d.IsEmpty() {
-		return nil, errors.New("deck is empty")
+		return Card{}, errors.New("deck is empty")
 	}
 	c := d.cards[0]
 	d.cards = d.cards[1:]
@@ -93,7 +93,7 @@ func (d *Deck) Next() (*Card, error) {
 }
 
 // Remove remove the given card from the deck
-func (d *Deck) Remove(card *Card) error {
+func (d *Deck) Remove(card Card) error {
 	if d.IsEmpty() {
 		return errors.New("deck is empty")
 	}
@@ -102,7 +102,7 @@ func (d *Deck) Remove(card *Card) error {
 		if c.GetRank() == card.GetRank() && c.GetSuit() == card.GetSuit() {
 			// Remove the element at index i from a.
 			copy(d.cards[i:], d.cards[i+1:])   // Shift a[i+1:] left one index.
-			d.cards[len(d.cards)-1] = nil      // Erase last element (write zero value).
+			d.cards[len(d.cards)-1] = Card{}   // Erase last element (write zero value).
 			d.cards = d.cards[:len(d.cards)-1] // Truncate slice.
 			return nil
 		}
@@ -111,7 +111,7 @@ func (d *Deck) Remove(card *Card) error {
 }
 
 // Return returns the card to the bottom of the deck
-func (d *Deck) Return(card *Card) error {
+func (d *Deck) Return(card Card) error {
 	if CardInList(card, d.cards) {
 		return fmt.Errorf("cannot add duplicate card %v", card)
 	}
@@ -123,10 +123,8 @@ func (d *Deck) Return(card *Card) error {
 // RandomCard returns a random card (not from a deck)
 func RandomCard() *Card {
 	return &Card{
-		Card: &ppb.Card{
-			Suite: RandomSuit(),
-			Rank:  RandomRank(),
-		},
+		Suite: RandomSuit(),
+		Rank:  RandomRank(),
 	}
 }
 
@@ -189,7 +187,7 @@ func RandomRankAbove(r ppb.CardRank) ppb.CardRank {
 }
 
 // CardsImage combines all the cards into a single horizontal image and returns it
-func CardsImage(cards []*Card, divider bool) (image.Image, error) {
+func CardsImage(cards []Card, divider bool) (image.Image, error) {
 	grids := []*gim.Grid{}
 
 	length := len(cards)

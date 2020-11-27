@@ -15,7 +15,7 @@ func TestNewDeck(t *testing.T) {
 func TestDeck_Remove(t *testing.T) {
 	tests := []struct {
 		name    string
-		card    *Card
+		card    Card
 		wantErr bool
 	}{
 		{

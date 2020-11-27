@@ -21,17 +21,17 @@ func TestMain(m *testing.M) {
 func TestCard_Sorting(t *testing.T) {
 	tests := []struct {
 		name  string
-		cards []*Card
-		want  []*Card
+		cards []Card
+		want  []Card
 	}{
 		{
-			cards: []*Card{
+			cards: []Card{
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Two),
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_King),
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Ten),
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Jack),
 			},
-			want: []*Card{
+			want: []Card{
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Two),
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Ten),
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Jack),
@@ -39,13 +39,13 @@ func TestCard_Sorting(t *testing.T) {
 			},
 		},
 		{
-			cards: []*Card{
+			cards: []Card{
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Two),
 				NewCard(ppb.CardSuit_Heart, ppb.CardRank_King),
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Ten),
 				NewCard(ppb.CardSuit_Spade, ppb.CardRank_Jack),
 			},
-			want: []*Card{
+			want: []Card{
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Two),
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Ten),
 				NewCard(ppb.CardSuit_Spade, ppb.CardRank_Jack),
@@ -53,13 +53,13 @@ func TestCard_Sorting(t *testing.T) {
 			},
 		},
 		{
-			cards: []*Card{
+			cards: []Card{
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Two),
 				NewCard(ppb.CardSuit_Spade, ppb.CardRank_Jack),
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Ten),
 				NewCard(ppb.CardSuit_Heart, ppb.CardRank_Two),
 			},
-			want: []*Card{
+			want: []Card{
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Two),
 				NewCard(ppb.CardSuit_Heart, ppb.CardRank_Two),
 				NewCard(ppb.CardSuit_Club, ppb.CardRank_Ten),

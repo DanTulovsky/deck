@@ -47,7 +47,7 @@ var (
 // SortByCards puts the cards in order
 // Low -> High: 2 -> Ace
 // Low -> High: Spade, Club, Diamond, Heart
-type SortByCards []*Card
+type SortByCards []Card
 
 func (a SortByCards) Len() int      { return len(a) }
 func (a SortByCards) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
@@ -57,31 +57,28 @@ func (a SortByCards) Less(i, j int) bool {
 
 // Card is a card.
 type Card struct {
-	Card *ppb.Card
+	Suite ppb.CardSuit
+	Rank  ppb.CardRank
 }
 
 // NewCard returns a new card.
-func NewCard(s ppb.CardSuit, r ppb.CardRank) *Card {
-	return &Card{
-		&ppb.Card{
-			Suite: s,
-			Rank:  r,
-		},
+func NewCard(s ppb.CardSuit, r ppb.CardRank) Card {
+	return Card{
+		Suite: s,
+		Rank:  r,
 	}
 }
 
 // NewRandomCard returns a random card
-func NewRandomCard() *Card {
-	return &Card{
-		&ppb.Card{
-			Suite: RandomSuit(),
-			Rank:  RandomRank(),
-		},
+func NewRandomCard() Card {
+	return Card{
+		Suite: RandomSuit(),
+		Rank:  RandomRank(),
 	}
 }
 
 // ShowImage prints the image of the card to the terminal
-func (c *Card) ShowImage() error {
+func (c Card) ShowImage() error {
 	// enc, err := imgcat.NewEncoder(os.Stdout, imgcat.Width(imgcat.Pixels(100)), imgcat.Inline(true))
 	// if err != nil {
 	// 	return err
@@ -102,7 +99,7 @@ func (c *Card) ShowImage() error {
 }
 
 // Image returns an image of the card
-func (c *Card) Image() (image.Image, error) {
+func (c Card) Image() (image.Image, error) {
 	f, err := c.ImageFile()
 	if err != nil {
 		return nil, err
@@ -115,7 +112,7 @@ func (c *Card) Image() (image.Image, error) {
 }
 
 // ImageFileName returns the name of the file containing the image
-func (c *Card) ImageFileName() string {
+func (c Card) ImageFileName() string {
 	file := fmt.Sprintf("%s%s.png", rankmap[c.GetRank()], string(c.GetSuit().String()[0]))
 	return path.Join(*deckDir, file)
 }
@@ -147,15 +144,15 @@ func (c *Card) AsASCII() string {
 }
 
 // ToProto returns the card as a proto
-func (c *Card) ToProto() *ppb.Card {
+func (c Card) ToProto() *ppb.Card {
 	return &ppb.Card{
-		Suite: c.Card.Suite,
-		Rank:  c.Card.Rank,
+		Suite: c.Suite,
+		Rank:  c.Rank,
 	}
 }
 
 // IsLessThan returns true if c < o
-func (c *Card) IsLessThan(o *Card) bool {
+func (c Card) IsLessThan(o Card) bool {
 
 	switch {
 	case c.GetRank() < o.GetRank():
@@ -168,7 +165,7 @@ func (c *Card) IsLessThan(o *Card) bool {
 }
 
 // IsSame returns true if c is the same card as o
-func (c *Card) IsSame(o *Card) bool {
+func (c Card) IsSame(o Card) bool {
 
 	if c.GetRank() == o.GetRank() && c.GetSuit() == o.GetSuit() {
 		return true
@@ -177,7 +174,7 @@ func (c *Card) IsSame(o *Card) bool {
 }
 
 // IsSameRank returns true if c is the same rank as o
-func (c *Card) IsSameRank(o *Card) bool {
+func (c Card) IsSameRank(o Card) bool {
 
 	if c.GetRank() == o.GetRank() {
 		return true
@@ -186,29 +183,30 @@ func (c *Card) IsSameRank(o *Card) bool {
 }
 
 // GetSuit returns the suit of the card.
-func (c *Card) GetSuit() ppb.CardSuit {
-	return c.Card.GetSuite()
+func (c Card) GetSuit() ppb.CardSuit {
+	return c.Suite
 }
 
 // GetRank returns the rank of the card.
-func (c *Card) GetRank() ppb.CardRank {
-	return c.Card.GetRank()
+func (c Card) GetRank() ppb.CardRank {
+	return c.Rank
 }
 
 // String returns ...
-func (c *Card) String() string {
-	return fmt.Sprintf("%v%v", rankmap[c.Card.GetRank()], suitmap[c.Card.GetSuite().String()])
+func (c Card) String() string {
+	return fmt.Sprintf("%v%v", rankmap[c.Rank], suitmap[c.Suite.String()])
 }
 
 // CardFromProto returns a *Card from ppb.Card
-func CardFromProto(cp *ppb.Card) *Card {
-	return &Card{
-		Card: cp,
+func CardFromProto(cp *ppb.Card) Card {
+	return Card{
+		Rank:  cp.GetRank(),
+		Suite: cp.GetSuite(),
 	}
 }
 
 // CardsToProto returns cards in a proto
-func CardsToProto(cards []*Card) []*ppb.Card {
+func CardsToProto(cards []Card) []*ppb.Card {
 	pcards := make([]*ppb.Card, len(cards))
 
 	for i, c := range cards {
@@ -218,9 +216,9 @@ func CardsToProto(cards []*Card) []*ppb.Card {
 	return pcards
 }
 
-// CardsFromProto returns a []*Card from []*ppb.Card
-func CardsFromProto(cp []*ppb.Card) []*Card {
-	cards := []*Card{}
+// CardsFromProto returns a []Card from []*ppb.Card
+func CardsFromProto(cp []*ppb.Card) []Card {
+	cards := []Card{}
 
 	for _, c := range cp {
 		cards = append(cards, CardFromProto(c))
@@ -230,7 +228,7 @@ func CardsFromProto(cp []*ppb.Card) []*Card {
 }
 
 // CardsEqual compares two slices of Cards, order matters.
-func CardsEqual(a, b []*Card) bool {
+func CardsEqual(a, b []Card) bool {
 	if len(a) != len(b) {
 		return false
 	}
@@ -246,7 +244,7 @@ func CardsEqual(a, b []*Card) bool {
 }
 
 // CardInList returns true if c is in l
-func CardInList(c *Card, l []*Card) bool {
+func CardInList(c Card, l []Card) bool {
 	for _, card := range l {
 		if c.IsSame(card) {
 			return true
@@ -256,7 +254,7 @@ func CardInList(c *Card, l []*Card) bool {
 }
 
 // RankInList returns true if r is in l
-func RankInList(r ppb.CardRank, l []*Card) bool {
+func RankInList(r ppb.CardRank, l []Card) bool {
 	for _, card := range l {
 		if r == card.GetRank() {
 			return true
@@ -266,7 +264,7 @@ func RankInList(r ppb.CardRank, l []*Card) bool {
 }
 
 // CountByRank returns a map of rank -> number present
-func CountByRank(cards []*Card) map[ppb.CardRank]int {
+func CountByRank(cards []Card) map[ppb.CardRank]int {
 	byrank := map[ppb.CardRank]int{}
 	for _, c := range cards {
 		if _, ok := byrank[c.GetRank()]; !ok {
@@ -278,11 +276,11 @@ func CountByRank(cards []*Card) map[ppb.CardRank]int {
 }
 
 // CardsByRank returns a map of rank -> []*Card with that rank
-func CardsByRank(cards []*Card) map[ppb.CardRank][]*Card {
-	byrank := make(map[ppb.CardRank][]*Card, len(cards))
+func CardsByRank(cards []Card) map[ppb.CardRank][]Card {
+	byrank := make(map[ppb.CardRank][]Card, len(cards))
 	for _, c := range cards {
 		if _, ok := byrank[c.GetRank()]; !ok {
-			byrank[c.GetRank()] = make([]*Card, 0)
+			byrank[c.GetRank()] = make([]Card, 0)
 		}
 		byrank[c.GetRank()] = append(byrank[c.GetRank()], c)
 	}
@@ -300,7 +298,7 @@ func CountBySuit(cards []*Card) map[ppb.CardSuit]int {
 	}
 
 	for _, card := range cards {
-		bysuit[card.Card.GetSuite()]++
+		bysuit[card.Suite]++
 	}
 	return bysuit
 }
